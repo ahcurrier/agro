@@ -1,0 +1,397 @@
+<!doctype html>
+<html>
+	<head>	
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="agro.js"></script>
+		<link rel="stylesheet" type="text/css" href="agro.css">
+
+	</head>
+	<body>
+		<h1>Table Testbed</h1>
+		
+		
+		<table class="agro agro-stacked">
+			<thead>
+				<tr>
+					<th>Tumor Name</th>
+					<th class="category">Organ Affected</th>
+					<th class="category">Treatment Type <em>Agents</em></th>
+					<th class="category">Strain Name <em>Strain Types</em></th>
+					<!--  <th colspan="4">Tumor Frequency Range</th> -->
+					<th>F Frequency</th>
+					<th>M Frequency</th>
+					<th>Mixed Frequency</th>
+					<th>Un. Frequency</th>
+					<th>Metastasizes To</th>
+					<th>Images</th>
+					<th>Tumor Summary</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Blood vessel - Aorta hyperplasia - nodular</td>
+					<td>Blood vessel - Aorta</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=3008">FVB/NJ</a>
+						<!-- \n -->
+						<em>
+							inbred</em>
+						</td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=3008&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=46571">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel - Aorta metaplasia - cartilaginous</td>
+					<td>Blood vessel - Aorta</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=143">C57BL/6J</a>
+						<!-- \n -->
+						<em>
+							inbred</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>0</td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=143&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=28320">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel - Aorta metaplasia - cartilaginous</td>
+					<td>Blood vessel - Aorta</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=4066">B6.FVB-Tg(C3-1-TAg)cJeg/J</a>
+						<!-- \n -->
+						<em>
+							congenic<!-- \n -->
+							transgenic</em>
+						</td>
+					<td>&gt;25</td>
+					<td>&gt;25</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=4066&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=28335,28358">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel - Vein hyperplasia</td>
+					<td>Liver</td>
+					<td>
+						Genetic Modification<!-- \n -->
+						<em>
+							tamoxifen (for inducing expression from mutant alleles)</em>
+						</td>
+					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
+						<!-- \n -->
+						<em>
+							targeted mutation (conditional)<!-- \n -->
+							transgenic</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8147&amp;organOfOriginKey=552&amp;tumorFrequencyKeys=77643">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel - Vein lesion</td>
+					<td>Liver</td>
+					<td>
+						Genetic Modification<!-- \n -->
+						<em>
+							tamoxifen (for inducing expression from mutant alleles)</em>
+						</td>
+					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
+						<!-- \n -->
+						<em>
+							targeted mutation (conditional)<!-- \n -->
+							transgenic</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8147&amp;organOfOriginKey=552&amp;tumorFrequencyKeys=77642">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel blastoma</td>
+					<td>Blood vessel</td>
+					<td>
+						Radiation<!-- \n -->
+						<em>
+							Cesium-137</em>
+						</td>
+					<td><a href="strainDetails.do?key=8015">C57BL/6J</a>
+						<!-- \n -->
+						<em>
+							other</em>
+						</td>
+					<td>8.33</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8015&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=74268">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel blastoma</td>
+					<td>Blood vessel</td>
+					<td>
+						Radiation<!-- \n -->
+						<em>
+							Cesium-137</em>
+						</td>
+					<td><a href="strainDetails.do?key=8014">C57BL/6J-Clock<sup>m1Jt</sup></a>
+						<!-- \n -->
+						<em>
+							transgenic</em>
+						</td>
+					<td>8.33</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8014&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=74282">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel dysplasia</td>
+					<td>Limb - Forelimb - Shoulder</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
+						<!-- \n -->
+						<em>
+							targeted mutation (conditional)<!-- \n -->
+							gene trapped<!-- \n -->
+							transgenic</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94747">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel hamartoma</td>
+					<td>Limb - Forelimb - Shoulder</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
+						<!-- \n -->
+						<em>
+							targeted mutation (conditional)<!-- \n -->
+							gene trapped<!-- \n -->
+							transgenic</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94746">Summary</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Blood vessel hamartoma</td>
+					<td>Limb - Forelimb</td>
+					<td>
+						None (spontaneous)
+						</td>
+					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
+						<!-- \n -->
+						<em>
+							targeted mutation (conditional)<!-- \n -->
+							gene trapped<!-- \n -->
+							transgenic</em>
+						</td>
+					<td></td>
+					<td></td>
+					<td>observed</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94750">Summary</a>
+					</td>
+				</tr>
+				
+				</tbody>
+			<!-- ////  End Results  //// -->
+		</table>
+
+		
+		
+		<table class="agro agro-flat">
+			<caption>
+				<h2>Raw Flat Table</h2>
+			</caption>
+			<thead>	
+				<tr>
+					<th>
+						NS Hemisphere
+					</th>
+					<th>
+						North
+					</th>
+					<th>
+						North
+					</th>
+					<th>
+						South
+					</th>
+					<th>
+						South
+					</th>
+					<th>
+						North
+					</th>					
+				</tr>				
+				<tr>
+					<th>
+						EW Hemisphere
+					</th>
+					<th>
+						West
+					</th>
+					<th>
+						East
+					</th>
+					<th>
+						West
+					</th>
+					<th>
+						East
+					</th>
+					<th>
+						East
+					</th>					
+				</tr>
+				<tr>
+					<th>
+						Density
+					</th>
+					<th>
+						Urban
+					</th>
+					<th>
+						Rural
+					</th>
+					<th>
+						Urban
+					</th>
+					<th>
+						Rural
+					</th>
+					<th>
+						Urban
+					</th>					
+				</tr>				
+				<tr>
+					<th>
+						Select
+					</th>
+					<th>
+						Pop
+					</th>
+					<th>
+						Pop
+					</th>
+					<th>
+						Pop
+					</th>
+					<th>
+						Pop
+					</th>
+					<th>
+						Color
+					</th>					
+				</tr>															
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						Earth
+					</td>
+					<td>
+						2
+					</td>
+					<td>
+						4
+					</td>
+					<td>
+						0.6
+					</td>
+					<td>
+						0.4
+					</td>
+					<td>
+						Blue
+					</td>					
+				</tr>
+				<tr>
+					<td>
+						Mars
+					</td>
+					<td>
+						?
+					</td>
+					<td>
+						?
+					</td>
+					<td>
+						?
+					</td>
+					<td>
+						?
+					</td>		
+					<td>
+						Red
+					</td>																			
+				</tr>
+			</tbody>
+		</table>
+	
+	</body>
+</html>

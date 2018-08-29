@@ -1,0 +1,110 @@
+
+
+table.agro {
+/* 	display:none; */
+font-size:0.25em;
+}
+h2,h3,h4,p {
+	margin:0;
+}
+
+td > ul {
+	list-style: none;
+	margin:0.5em 0 0;
+	padding:0;
+	font-size:0.75em;
+}
+table {
+	border-collapse: collapse;
+	margin:2em 0;
+}
+caption {
+	padding:0 0 6px;
+}
+td {
+	padding:4px 10px;
+}
+th {
+	padding: 0 10px;
+	position:relative;
+}
+td h4,
+th h4 {
+	color:rgba(0,0,0,0.4);
+	font-weight:normal;
+	text-transform: uppercase;
+	font-size:0.75em;
+	font-family: sans-serif;
+	cursor:move;
+	cursor:-moz-grab;
+	cursor:-webkit-grab;
+	user-select:none;
+	-webkit-user-select:none;
+}
+th h4 {
+	padding:4px 16px 4px 0;
+	position:relative;
+}
+td h4:hover,
+th h4:hover {
+	background-color:rgba(0, 160, 209, 0.25);
+	color:black;
+}
+td {
+	border:1px solid #bbb;
+}
+table.hierarchical tr > td:last-child {
+	color:red;
+}
+table.flat td + td {
+	color:red;
+}
+
+th > h4.drop-into-hover {
+	background-color:red;
+}
+
+th > div.drop-edge-hover {
+	background:purple;
+}
+
+th > div {
+	position:absolute;
+	top:0;
+	right:-10px;
+	bottom:0;
+	width:20px;
+}
+
+th h4 span {
+	display:block;
+	position:absolute;
+	padding:3px 0 5px;
+	top:0;
+	right:0;
+	bottom:0;
+	text-align:center;
+	width:16px;
+	color:transparent;
+	cursor:pointer;
+}
+
+th h4:hover span {
+	color:red;
+}
+
+th h4 span:hover {
+	color:white;
+	background-color:red;
+}
+
+caption select {
+	float:right;
+	
+}
+
+.inactive {
+	pointer-events: none;
+	visibility:hidden;
+}
+
