@@ -1,4 +1,3 @@
-
 $(function() {
 	
 	var agro = function($sourceTable, options) {
@@ -9,26 +8,57 @@ $(function() {
 			$sourceRows = $sourceTable.find('tbody > tr'),
 			$sourceCells = $sourceTable.find('tbody > tr > td'),
 			
-			$agro = $('<table></table>'),
-			$agroCaption = $('<caption></caption>'),
-			$hidden = $('<select></select>'),
-			$agroHead = $('<thead></thead>'),
-			$agroHeadRow = $('<tr></tr>'),
-			$agroBody = $('<tbody></tbody>'),
-
-			$categories,
-			$metrics,						
+			$a, $caption, $hidden, $thead, $theadRow, $tbody,
+			$categories, $metrics, $categoryNames, metricCells,
 			categories = [],
 			metrics = [],
 			renderCatCell,
-			colClasses = [],
+			cellClasses = [],
 			hidden = [],
-			i, um = {}, r, rs;
+			i, um = {}, r, rs,
+			
+			getTermCellCallback = function(category, categoryId) {
+				
+				var uc = {};
+				
+				return function(i) {
+					var $term = $(this),
+						term = $term.text(),
+						cellClass;
+					if (!uc.hasOwnProperty(term)) {
+						category.terms.push(term);
+						uc[term] = 1;
+					}
+	
+					termId = category.terms.indexOf(term);
+					cellClass = categoryId + '-' + termId;
+					if (cellClasses.length < i + 1) {
+						cellClasses.push([]);
+					}
+					cellClasses[i].push(cellClass);							
+					$term.addClass(cellClass);
+				};
+			},
+			
+			metricCellCallback = function(i) {
+				var $metric = $(this),
+					metric = $metric.text(),
+					cellClass;
+				if (!um.hasOwnProperty(metric)) {
+					metrics.push(metric);
+					um[metric] = 1;
+				}
+				cellClass = 'm' + metrics.indexOf(metric);
+				cellClasses[i].push(cellClass);
+				$metric.addClass(cellClass);
+			};
 		
 		if (o.source === undefined || o.source === 'flat') {
 			
+			// Flat source
+			// Get categories, terms, and metrics from thead
+			
 			$categories = $sourceTable.find('thead > tr:not(:last-child)');
-			$metrics = $sourceTable.find('thead > tr:last-child > th + th');
 
 			$categories.each(function() {
 				var $row = $(this),
@@ -36,47 +66,64 @@ $(function() {
 					$terms = $row.find('th + th'),
 					category = { name: $name.text().trim(), terms: [] },
 					categoryId = String.fromCharCode(categories.length + 97),
-					uc = {};
-					
-				$terms.each(function(i) {
-					var $term = $(this),
-						term = $term.text(),
-						termIndex,
-						colClass;
-					if (!uc.hasOwnProperty(term)) {
-						category.terms.push(term);
-						uc[term] = 1;
-					}
-	
-					termId = category.terms.indexOf(term);
-					colClass = categoryId + '-' + termId;
-					if (colClasses.length < i + 1) {
-						colClasses.push([]);
-					}
-					colClasses[i].push(colClass);							
-					$term.addClass(colClass);
-				});
+					termCellCallback = getTermCellCallback(category, categoryId);
+				
+				$terms.each(termCellCallback);
 				categories.push(category);
 			});
-	
-			$metrics.each(function(i) {
-				var $metric = $(this),
-					metric = $metric.text(),
-					metricClass;
-				if (!um.hasOwnProperty(metric)) {
-					metrics.push(metric);
-					um[metric] = 1;
-				}
-				metricClass = 'm' + metrics.indexOf(metric);
-				colClasses[i].push(metricClass);
-				$metric.addClass(metricClass);
+			
+			
+			$metrics = $sourceTable.find('thead > tr:last-child > th + th');			
+			$metrics.each(metricCellCallback);
+		
+			// Apply category and metric classes to each column
+			
+			for (i = 0; i < cellClasses.length; i += 1) {
+				$sourceCells.filter(':nth-child(' + (i + 2) + ')').attr('class', cellClasses[i].join(' '));
+			}	
+							
+		} else {
+			
+			// Stacked source
+			// Get categories and metrics from thead
+			// Get terms from tbody
+			
+			$categoryNames = $sourceTable.find('thead th.category');
+			
+			$categoryNames.each(function() {
+				
+				var $name = $(this),
+					index = $name.index() + 1,
+					$terms = $sourceCells.filter(':nth-child(' + index + ')'),
+					category = { name: $name.text().trim(), terms: [] },
+					categoryId = String.fromCharCode(categories.length + 97),
+					termCellCallback = getTermCellCallback(category, categoryId);
+					
+				$terms.each(termCellCallback);
+				categories.push(category);
+					
+			});
+
+			// Apply category classes to each row
+			
+			metricCells = 'td:nth-child(' + ($categoryNames.length + 1) + ') ~ td';
+			
+			$sourceRows.each(function(r) {
+				$(this).find(metricCells).attr('class', cellClasses[r].join(' '));
 			});
 			
-			// Apply category classes to each column
+			$metrics = $sourceTable.find('thead th + th:not(.category)');
+
+			$metrics.each(metricCellCallback);
 			
-			for (i = 0; i < colClasses.length; i += 1) {
-				$sourceCells.filter(':nth-child(' + (i + 2) + ')').attr('class', colClasses[i].join(' '));
-			}					
+			// Apply metric classes to each column
+			
+			$metrics.each(function() {				
+				var $metric = $(this);					
+				$sourceCells.filter(':nth-child(' + ($metric.index() + 1) + ')').addClass($metric.attr('class'));
+				
+			});
+
 		}
 		
 			
@@ -145,7 +192,7 @@ $(function() {
 					
 					if (termId < category.terms.length - 1) {
 						$nextRow = $('<tr></tr>');
-						$agroBody.append($nextRow);
+						$tbody.append($nextRow);
 						$currentRow = $nextRow;
 					}
 				}
@@ -186,15 +233,16 @@ $(function() {
 				}
 			}
 		};
+
+		$hidden = $('<select class="inactive"></select>').append('<option disabled="disabled">Show hidden columns&hellip;</option>');
+		$caption = $('<caption></caption>').append($hidden);
+		$theadRow = $('<tr></tr>');
+		$thead = $('<thead></thead>').append($theadRow);
+		$tbody = $('<tbody></tbody>');
 		
-		$hidden.addClass('inactive');
-		$hidden.append('<option disabled="disabled">Show hidden columns&hellip;</option>');
-		$agroCaption.append($hidden);
-		$agro.append($agroCaption);
-		$agroHead.append($agroHeadRow);
-		$agro.append($agroHead);
-		$agro.append($agroBody);
-		$sourceTable.after($agro);
+		$a = $('<table></table>').append($caption).append($thead).append($tbody);
+
+		$sourceTable.after($a);
 		
 		// Show hidden columns
 		
@@ -269,12 +317,12 @@ $(function() {
 			
 			console.log('o.display: %o', o.display);				
 											
-			$agroHeadRow.empty();
-			$agroBody.empty();
+			$theadRow.empty();
+			$tbody.empty();
 			
 			// Render table head
 
-			$agroHeadRow.append('<th data-col="-1"><div></div></th>');
+			$theadRow.append('<th data-col="-1"><div></div></th>');
 			$.each(o.display, function(i, c) {
 				var $th, $h4, $hide, $edge;
 				if (c.v) {
@@ -287,7 +335,7 @@ $(function() {
 					$th.append($edge);
 					$th.data('col', i);
 
-					$agroHeadRow.append($th);
+					$theadRow.append($th);
 					
 					// Hide column
 					
@@ -301,7 +349,7 @@ $(function() {
 			});
 			
 			$.each(metrics, function(i, metric) {
-				$agroHeadRow.append('<th>' + metric + '</th>');
+				$theadRow.append('<th>' + metric + '</th>');
 			});
 			
 			// Render table body
@@ -317,7 +365,7 @@ $(function() {
 				
 				$row.append($rowName);
 				
-				$agroBody.append($row);
+				$tbody.append($row);
 				renderCatCell($row, [rowClass], [], true, 0);
 				
 				
@@ -330,18 +378,18 @@ $(function() {
 
 			// Header drag and drop
 
-			$agro.find('th > h4').draggable({ 
+			$a.find('th > h4').draggable({ 
 				axis: 'x', 
 				revert: 'invalid', 
 				revertDuration: 100 
 			});
 			
-			$agro.find('td li > h4').draggable({
+			$a.find('td li > h4').draggable({
 				revert: 'invalid', 
 				revertDuration: 100 							
 			});								
 
-			$agro.find('th > h4').droppable({
+			$a.find('th > h4').droppable({
 				
 				accept: function($d) {
 					var dragFrom = $d.closest('th,td').data('col'),
@@ -377,7 +425,7 @@ $(function() {
 			
 
 			
-			$agro.find('th > div').droppable({
+			$a.find('th > div').droppable({
 				
 				accept: function($d) {
 					
@@ -448,9 +496,9 @@ $(function() {
 	};
 	
 	
-	var tableFromFlat = agro($('.agro.agro-flat'), { source: 'flat'/* display: [{i:0,v:true},{i:1,v:true}] */ });
+	// var tableFromFlat = agro($('.agro.agro-flat'), { source: 'flat'/* display: [{i:0,v:true},{i:1,v:true}] */ });
 
-	// var tableFromStacked = agro($('agro.agro-stacked'), { source: 'stacked' });
+	var tableFromStacked = agro($('.agro.agro-stacked'), { source: 'stacked' });
 
 	
 });
