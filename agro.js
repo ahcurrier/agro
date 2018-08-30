@@ -10,14 +10,17 @@ $(function() {
 			
 			$a, $caption, $hidden, $thead, $theadRow, $tbody,
 			$categories, $metrics, $categoryNames, metricCells,
+			$filledCells,
 			categories = [],
 			metrics = [],
 			renderCatCell,
 			cellClasses = [],
 			hidden = [],
 			i, um = {}, r, rs,
+			ui = {},
+			items = [];
 			
-			getTermCellCallback = function(category, categoryId) {
+			getTermCellCallback = function(category) {
 				
 				var uc = {};
 				
@@ -31,7 +34,7 @@ $(function() {
 					}
 	
 					termId = category.terms.indexOf(term);
-					cellClass = categoryId + '-' + termId;
+					cellClass = category.id + '-' + termId;
 					if (cellClasses.length < i + 1) {
 						cellClasses.push([]);
 					}
@@ -52,6 +55,7 @@ $(function() {
 				cellClasses[i].push(cellClass);
 				$metric.addClass(cellClass);
 			};
+
 		
 		if (o.source === undefined || o.source === 'flat') {
 			
@@ -64,9 +68,8 @@ $(function() {
 				var $row = $(this),
 					$name = $row.find('th:first-child'),
 					$terms = $row.find('th + th'),
-					category = { name: $name.text().trim(), terms: [] },
-					categoryId = String.fromCharCode(categories.length + 97),
-					termCellCallback = getTermCellCallback(category, categoryId);
+					category = { id: String.fromCharCode(categories.length + 97), name: $name.text().trim(), terms: [] },
+					termCellCallback = getTermCellCallback(category);
 				
 				$terms.each(termCellCallback);
 				categories.push(category);
@@ -79,14 +82,13 @@ $(function() {
 			// Apply category and metric classes to each column
 			
 			for (i = 0; i < cellClasses.length; i += 1) {
-				$sourceCells.filter(':nth-child(' + (i + 2) + ')').attr('class', cellClasses[i].join(' '));
+				$sourceCells.filter(':parent:nth-child(' + (i + 2) + ')').attr('class', cellClasses[i].join(' '));
 			}	
 							
 		} else {
 			
 			// Stacked source
-			// Get categories and metrics from thead
-			// Get terms from tbody
+			// Get categories and metrics from thead, get terms from tbody
 			
 			$categoryNames = $sourceTable.find('thead th.category');
 			
@@ -95,9 +97,8 @@ $(function() {
 				var $name = $(this),
 					index = $name.index() + 1,
 					$terms = $sourceCells.filter(':nth-child(' + index + ')'),
-					category = { name: $name.text().trim(), terms: [] },
-					categoryId = String.fromCharCode(categories.length + 97),
-					termCellCallback = getTermCellCallback(category, categoryId);
+					category = { id: String.fromCharCode(categories.length + 97), name: $name.text().trim(), terms: [] },
+					termCellCallback = getTermCellCallback(category);
 					
 				$terms.each(termCellCallback);
 				categories.push(category);
@@ -106,7 +107,7 @@ $(function() {
 
 			// Apply category classes to each row
 			
-			metricCells = 'td:nth-child(' + ($categoryNames.length + 1) + ') ~ td';
+			metricCells = 'td:nth-child(' + ($categoryNames.length + 1) + ') ~ td:parent';
 			
 			$sourceRows.each(function(r) {
 				$(this).find(metricCells).attr('class', cellClasses[r].join(' '));
@@ -119,20 +120,35 @@ $(function() {
 			// Apply metric classes to each column
 			
 			$metrics.each(function() {				
-				var $metric = $(this);					
-				$sourceCells.filter(':nth-child(' + ($metric.index() + 1) + ')').addClass($metric.attr('class'));
-				
+				var $metric = $(this);	
+								
+				$sourceCells.filter(':parent:nth-child(' + ($metric.index() + 1) + ')').addClass($metric.attr('class'));
 			});
 
 		}
-		
+
+		$sourceRows.each(function() {
 			
+			var $sourceRow = $(this),
+				$rowCells = $sourceRow.find('td'),
+				$itemCell = $rowCells.eq(0),
+				itemKey = $itemCell.text().trim(),
+				itemHtml = $itemCell.html();
+				
+			if (!ui.hasOwnProperty(itemKey)) {
+				ui[itemKey] = items.length;
+				items.push(itemHtml);
+			}
+			
+			$rowCells.filter('[class]').addClass('i' + ui[itemKey]);
+		});
+
 		if (o.display === undefined) {
 			o.display = [];
 			for(i = 0; i < categories.length; i += 1) {
 				o.display.push({i:i,v:true});
 			}
-		}
+		}		
 
 		/*
 			Render a cell in the agro table.
@@ -150,8 +166,9 @@ $(function() {
 			var category, termId, $cell,
 				$currentRow = $row,
 				cellClass, cellCategories, cellSubcategories, cellSubcategoriesHtml,
-				rowspan,
-				$nextRow, categoryIndex, categoryId, m, $metricCells, sum, summary, isNumber, d, isColVisible;
+				termDescendantCount, metricFilter,
+				descendantCount = 0,
+				$nextRow, categoryIndex, m, $metricCells, sum, summary, isNumber, d, isColVisible;
 				
 			if (colIndex < o.display.length) {
 				
@@ -159,11 +176,8 @@ $(function() {
 
 				categoryIndex = o.display[colIndex].i;
 				category = categories[categoryIndex];
-				categoryId = String.fromCharCode(categoryIndex + 97);
 				isColVisible = o.display[colIndex].v;
-				
-				rowspan = (colIndex < o.display.length - 1) ? o.display[colIndex + 1].rowspan : 1;
-				
+
 				if (isPreviousColVisible) {
 					cellSubcategories = [];
 					cellSubcategoriesHtml = '';	
@@ -174,28 +188,40 @@ $(function() {
 				
 				for (termId = 0; termId < category.terms.length; termId += 1) {
 					
-					cellClass = classChain.concat(categoryId + '-' + termId);
-					
-					
-					// To do: need to add catgory data to h4 for dragging
-					
-					
+					cellClass = classChain.concat(category.id + '-' + termId);
 					cellCategories = cellSubcategories.concat('<h4 data-col="' + colIndex + '">' + category.name + '</h4>' + category.terms[termId]);
-					
+
 					if (isColVisible) {
-						$cell = $('<td rowspan="' + rowspan + '">' + category.terms[termId] + cellSubcategoriesHtml + '</td>');
-						$cell.data('col', colIndex).addClass(cellClass.join(' '));
-						$currentRow.append($cell);
+						$cell = $('<td></td>').appendTo($currentRow);
 					}
 					
-					renderCatCell($currentRow, cellClass, cellCategories, isColVisible, colIndex + 1);
+					termDescendantCount = renderCatCell($currentRow, cellClass, cellCategories, isColVisible, colIndex + 1);
+					descendantCount += termDescendantCount;
 					
-					if (termId < category.terms.length - 1) {
+					if (isColVisible) {
+						
+						if (termDescendantCount > 0) {
+							$cell.attr('rowspan', termDescendantCount)
+								.data('col', colIndex)
+								.attr('data-descendants', termDescendantCount) // debug
+								.addClass(cellClass.join(' '))
+								.html(category.terms[termId] + cellSubcategoriesHtml);
+						} else {
+							$cell.remove();
+							if ($currentRow.is(':empty')) {
+								$currentRow.remove();
+							}
+						}
+					}
+					
+					if (termId < category.terms.length - 1 && termDescendantCount > 0) {
 						$nextRow = $('<tr></tr>');
 						$tbody.append($nextRow);
 						$currentRow = $nextRow;
 					}
 				}
+				
+				return descendantCount;
 
 
 			} else {
@@ -203,36 +229,50 @@ $(function() {
 				// After all category cells have been rendered,
 				// display data cells. Aggregate if necessary.
 				
-				for (m = 0; m < metrics.length; m += 1) {
-					$metricCells = $sourceCells.filter('.m' + m + '.' + classChain.join('.'));
-					if ($metricCells.length > 1) {
-						sum = 0;
-						summary = [];
-						isNumber = true;
-						$metricCells.each(function() {
-							var cellValue = $(this).html() || '';
-							value = parseFloat(cellValue);
-							if (!isNaN(value)) {
-								sum += value;
+				metricFilter = '.' + classChain.join('.');
+				metricValueCount = $sourceCells.filter(metricFilter).length;
+				
+				if (metricValueCount > 0) {				
+					for (m = 0; m < metrics.length; m += 1) {
+						$metricCells = $sourceCells.filter('.m' + m + metricFilter);
+						if ($metricCells.length > 1) {
+							sum = 0;
+							summary = [];
+							isNumber = true;
+							$metricCells.each(function() {
+								var cellValue = $(this).html() || '';
+								value = parseFloat(cellValue);
+								if (!isNaN(value)) {
+									sum += value;
+								} else {
+									isNumber = false;
+								}
+								summary.push(cellValue);
+							});
+							if (isNumber) {
+								metricValue = sum;
 							} else {
-								isNumber = false;
+								metricValue = summary.join('<br>');
 							}
-							summary.push(cellValue);
-						});
-						if (isNumber) {
-							metricValue = sum;
 						} else {
-							metricValue = summary.join('<br>');
+							metricValue = $metricCells.html() || '';
 						}
-					} else {
-						metricValue = $metricCells.html() || '';
+	
+						$currentRow.append('<td class="m' + m + '">' + metricValue + '</td>');
+						
 					}
-
-					$currentRow.append('<td class="m' + m + '">' + metricValue + '</td>');
+					
+					return 1;
+					
+				} else {
+					
+					return 0;
 					
 				}
 			}
 		};
+		
+		// Render the agro table structure
 
 		$hidden = $('<select class="inactive"></select>').append('<option disabled="disabled">Show hidden columns&hellip;</option>');
 		$caption = $('<caption></caption>').append($hidden);
@@ -256,6 +296,8 @@ $(function() {
 			$hidden.children().first().prop('selected', true);
 			$hidden.toggleClass('inactive', $hidden.children().length < 2);
 		});
+		
+		// Render the agro table data
 
 		a.render = function(renderOptions) {
 			
@@ -267,7 +309,6 @@ $(function() {
 					if (colIndex !== undefined) {
 						c = colIndex - 1;
 					
-						// console.log('3. getColWidth(' + colIndex + ')');
 						// If dragging a rolled up header, width is always 1
 						if (o.display[colIndex].v === false) {
 							return 1;
@@ -284,37 +325,35 @@ $(function() {
 				
 				moveColRange = function(fromIndex, toOriginalIndex) {
 					
-					var w = o.display[fromIndex].w,
-						toIndex = toOriginalIndex,
-						colRange, colsBefore;
+					var w, toIndex, colRange, colsBefore;
 					
-					// If the insertion index is after the range being moved, need to shift index
-					
-					if (toIndex >= fromIndex + w) {
-						toIndex -= w;
-					}														
-
-					colRange = o.display.splice(fromIndex - w + 1, w);
-					colsBefore = o.display.splice(0, toIndex);			
-					o.display = colsBefore.concat(colRange).concat(o.display);						
+					if (fromIndex + 1 !== toOriginalIndex) {
+						
+						w = o.display[fromIndex].w;
+						toIndex = toOriginalIndex;				
+						
+						// If the insertion index is after the range being moved, need to shift index
+						
+						if (toIndex >= fromIndex + w) {
+							toIndex -= w;
+						}														
+	
+						colRange = o.display.splice(fromIndex - w + 1, w);
+						colsBefore = o.display.splice(0, toIndex);			
+						o.display = colsBefore.concat(colRange).concat(o.display);
+					}					
 				},
 				
 				
 				i;
 			o.display = ro.display || o.display;
 
-			// Calculate rowspans and widths for columns
+			// Calculate widths for columns
 
 			for (i = 0; i < o.display.length; i += 1) {
-				rs = 1;
-				for (r = i; r < o.display.length; r += 1) {
-					categoryIndex = o.display[r].i;
-					rs *= categories[categoryIndex].terms.length;
-				}
-				o.display[i].rowspan = rs;
 				o.display[i].w = getColWidth(i);				
 			}	
-			
+
 			console.log('o.display: %o', o.display);				
 											
 			$theadRow.empty();
@@ -353,28 +392,18 @@ $(function() {
 			});
 			
 			// Render table body
-
-			$sourceRows.each(function(r) {
+			
+			$.each(items, function(i, item) {				
 				
-				var $flatRow = $(this);
-					$row = $('<tr></tr>'),
-					$rowName = $('<td rowspan="' + o.display[0].rowspan + '">' + $flatRow.find('td:first-child').text() + '</td>'),
-					rowClass = 'r' + r;
+				var $row = $('<tr></tr>'),
+					itemClass = 'i' + i,
+					$itemCell = $('<td>' + item + '</td>').appendTo($row);
 					
-				$flatRow.find('td').addClass(rowClass);
-				
-				$row.append($rowName);
-				
 				$tbody.append($row);
-				renderCatCell($row, [rowClass], [], true, 0);
-				
-				
-			});
-			
-			// Get the width of a rolled up column
-			// == run of consecutive v=false to the left of v=true column, plus that column
-			
-			getColWidth 					
+				rowDescendants = renderCatCell($row, [itemClass], [], true, 0);
+				$itemCell.attr('rowspan', rowDescendants);				
+
+			});				
 
 			// Header drag and drop
 
@@ -405,26 +434,15 @@ $(function() {
 					var subcatCol = ui.draggable.data('col'),
 						dragFrom = (subcatCol === undefined) ? ui.draggable.closest('th,td').data('col') : subcatCol,
 						dragInto = $(this).parent().data('col');
-
-					o.display[dragFrom].v = false;
-
-					// Check if this works when:
-					// a. dragging from more than 1 away to the left - need three categories to test
-					// b. dragging a rollup into a new column
 					
-					if (dragFrom + 1 !== dragInto) {
-						if (o.display[dragFrom].w === 1) {
-							o.display.splice(dragInto, 0, o.display.splice(dragFrom, 1)[0]);
-						} else {
-							moveColRange(dragFrom, dragInto);
-						}
-					}
+					console.log('Drop range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] into ' + dragInto);	
+					
+					o.display[dragFrom].v = false;
+					moveColRange(dragFrom, dragInto);
 					a.render();
 				}
 			});
-			
 
-			
 			$a.find('th > div').droppable({
 				
 				accept: function($d) {
@@ -447,9 +465,7 @@ $(function() {
 						// Accept callback is called one last time after drop occurs
 						// When this happens, col values are undefined. Not sure why.
 						return false;
-					}
-					
-					console.log('Drag range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] after ' + dragAfter);				
+					}			
 
 					return $d.is('h4') && (dragFrom !== dragAfter) && (dragFrom !== dragAfter + o.display[dragFrom].w);
 				},
@@ -458,33 +474,16 @@ $(function() {
 					'ui-droppable-hover': 'drop-edge-hover'
 				},
 				drop: function(event, ui) {
+					
 					var subcatCol = ui.draggable.data('col'),
 						dragFrom = (subcatCol === undefined) ? ui.draggable.closest('th,td').data('col') : subcatCol,
-						dragAfter = $(this).parent().data('col'),
-						colRange, colsBefore;		
-					
-					console.log('Drop from ' + dragFrom);
-					console.log('Drop after' + dragAfter);
-					console.log('Drop range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] after ' + dragAfter);	
-					
-					
-					// No matter what, the column being dropped will cease to be a rollup (if it was)						
-					o.display[dragFrom].v = true;
-					
-					if (dragFrom !== dragAfter + 1 && o.display[dragFrom].w === 1) {
-						
-						// Move a single column if it's not already immediately to the left (as rollup)
-						o.display.splice(dragAfter + 1, 0, o.display.splice(dragFrom, 1)[0]);
-						
-					} else if (o.display[dragFrom].w > 1) {
-						
-						// Move multiple columns (parent and rollups)
-						// This implies that the column being dropped is not itself a rollup		
-						moveColRange(dragFrom, dragAfter + 1);
-							
-					}
-					a.render();
-												
+						dragAfter = $(this).parent().data('col');	
+
+					console.log('Drop range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] after ' + dragAfter);					
+										
+					o.display[dragFrom].v = true; // will cease to be a rollup
+					moveColRange(dragFrom, dragAfter + 1);
+					a.render();												
 				}
 			});	
 
@@ -496,7 +495,7 @@ $(function() {
 	};
 	
 	
-	// var tableFromFlat = agro($('.agro.agro-flat'), { source: 'flat'/* display: [{i:0,v:true},{i:1,v:true}] */ });
+	// var tableFromFlat = agro($('.agro.agro-flat'), { source: 'flat', display: [{i:2,v:true}] });
 
 	var tableFromStacked = agro($('.agro.agro-stacked'), { source: 'stacked' });
 
