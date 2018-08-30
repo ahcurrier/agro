@@ -18,7 +18,7 @@ $(function() {
 			hidden = [],
 			i, um = {}, r, rs,
 			ui = {},
-			items = [];
+			items = [],
 			
 			getTermCellCallback = function(category) {
 				
@@ -27,7 +27,7 @@ $(function() {
 				return function(i) {
 					var $term = $(this),
 						term = $term.text(),
-						cellClass;
+						cellClass, termId;
 					if (!uc.hasOwnProperty(term)) {
 						category.terms.push(term);
 						uc[term] = 1;
@@ -166,7 +166,7 @@ $(function() {
 			var category, termId, $cell,
 				$currentRow = $row,
 				cellClass, cellCategories, cellSubcategories, cellSubcategoriesHtml,
-				termDescendantCount, metricFilter,
+				termDescendantCount, metricFilter, metricValueCount, metricValue,
 				descendantCount = 0,
 				$nextRow, categoryIndex, m, $metricCells, sum, summary, isNumber, d, isColVisible;
 				
@@ -240,9 +240,9 @@ $(function() {
 							summary = [];
 							isNumber = true;
 							$metricCells.each(function() {
-								var cellValue = $(this).html() || '';
-								value = parseFloat(cellValue);
-								if (!isNaN(value)) {
+								var cellValue = $(this).html() || '',
+									value = parseFloat(cellValue);
+								if (!Number.isNaN(value)) {
 									sum += value;
 								} else {
 									isNumber = false;
@@ -342,10 +342,8 @@ $(function() {
 						colsBefore = o.display.splice(0, toIndex);			
 						o.display = colsBefore.concat(colRange).concat(o.display);
 					}					
-				},
+				};
 				
-				
-				i;
 			o.display = ro.display || o.display;
 
 			// Calculate widths for columns
@@ -397,7 +395,8 @@ $(function() {
 				
 				var $row = $('<tr></tr>'),
 					itemClass = 'i' + i,
-					$itemCell = $('<td>' + item + '</td>').appendTo($row);
+					$itemCell = $('<td>' + item + '</td>').appendTo($row),
+					rowDescendants;
 					
 				$tbody.append($row);
 				rowDescendants = renderCatCell($row, [itemClass], [], true, 0);
