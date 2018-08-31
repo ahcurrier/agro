@@ -3,7 +3,7 @@
 	$.fn.agro = function(options) {
 
 	    if (this.length > 1) {
-	        this.each(function() { $(this).agro(options) });
+	        this.each(function() { $(this).agro(options); });
 	        return this;
 	    }
 
@@ -41,8 +41,8 @@
 	
 				},
 				'sum': function(values) {
-					return numbers.reduce(function(sum, n) {
-						sum += n;
+					return values.reduce(function(sum, n) {
+						return sum + n;
 					});
 				}
 			},
@@ -247,9 +247,6 @@
 								.html(category.terms[termId] + cellSubcategoriesHtml);
 						} else {
 							$cell.remove();
-							if ($currentRow.is(':empty')) {
-								$currentRow.remove();
-							}
 						}
 					}
 					
@@ -289,7 +286,7 @@
 								}
 								summary.push(cellValue);
 							});
-							if (isNumber) {
+							if (isNumber) {								
 								metricValue = aggregators[metric.aggregate](aggregateValues, metric.unit);
 							} else {
 								metricValue = summary.join('<br>');
@@ -317,10 +314,10 @@
 		$hidden = $('<select class="inactive"></select>').append('<option disabled="disabled">Show hidden columns&hellip;</option>');
 		$caption = $('<caption></caption>').append($hidden);
 		$theadRow = $('<tr></tr>');
-		$thead = $('<thead></thead>').append($theadRow);
+		$thead = $('<thead></thead>');
 		$tbody = $('<tbody></tbody>');
 		
-		$a = $('<table class="agro"></table>').append($caption).append($thead).append($tbody);
+		$a = $('<table class="agro"></table>').append($caption).append($thead);
 
 		this.after($a);
 		
@@ -392,11 +389,11 @@
 				o.display[i].w = getColWidth(i);				
 			}	
 
-			console.log('o.display: %o', o.display);				
+			console.log(o.display);				
 											
-			$theadRow.empty();
-			$tbody.empty();
-			
+			$theadRow.empty().remove();
+			$tbody.empty().remove();
+
 			// Render table head
 
 			$theadRow.append('<th data-col="-1"><div></div></th>');
@@ -441,9 +438,13 @@
 				$tbody.append($row);
 				rowDescendants = renderCatCell($row, [itemClass], [], true, 0);
 				$itemCell.attr('rowspan', rowDescendants);				
-
-			});				
-
+				$row.nextAll(':empty').remove();
+			});	
+			
+			$thead.append($theadRow);
+			$a.append($tbody);
+						
+			
 			// Header drag and drop
 
 			$a.find('th > h4').draggable({ 
@@ -474,7 +475,7 @@
 						dragFrom = (subcatCol === undefined) ? ui.draggable.closest('th,td').data('col') : subcatCol,
 						dragInto = $(this).parent().data('col');
 					
-					console.log('Drop range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] into ' + dragInto);	
+					console.log('Drop ' + (dragFrom - o.display[dragFrom].w + 1) + '-' + dragFrom + ' into ' + dragInto);	
 					
 					o.display[dragFrom].v = false;
 					moveColRange(dragFrom, dragInto);
@@ -518,7 +519,7 @@
 						dragFrom = (subcatCol === undefined) ? ui.draggable.closest('th,td').data('col') : subcatCol,
 						dragAfter = $(this).parent().data('col');	
 
-					console.log('Drop range [' + (dragFrom - o.display[dragFrom].w + 1) + ',' + dragFrom + '] after ' + dragAfter);					
+					console.log('Drop ' + (dragFrom - o.display[dragFrom].w + 1) + '-' + dragFrom + ' after ' + dragAfter);					
 										
 					o.display[dragFrom].v = true; // will cease to be a rollup
 					moveColRange(dragFrom, dragAfter + 1);
@@ -527,13 +528,22 @@
 			});	
 
 		};
+		
+		a.message = function() { window.alert(self.attr('class')); }
 
 		a.render();		
 		
-		// In collections, public methods are called via the data object		
+		// Public methods can always be called via the data object
+		// Examples: 
+		// $collection.eq(0).data('render')();	
+		// $instance.data('render')();	
+		
 		$.each(a, function(k, o) { self.data(k, o);	}); 
 		
-		// In single instances, methods are called via the object itself
+		// In single instances, methods can also be called via the object itself
+		// Example:
+		// $instance.render();
+		
 		$.extend(this, a);
 
 		return this;

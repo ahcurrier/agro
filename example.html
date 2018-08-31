@@ -5,247 +5,9 @@
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="agro.js"></script>
 		<link rel="stylesheet" type="text/css" href="agro.css">
-
 	</head>
 	<body>
-		<h1>Table Testbed</h1>
-		
-		
-		<table class="agro-source">
-			<thead>
-				<tr>
-					<th>Tumor Name</th>
-					<th class="category">Organ Affected</th>
-					<th class="category">Treatment Type <em>Agents</em></th>
-					<th class="category">Strain Name <em>Strain Types</em></th>
-					<!--  <th colspan="4">Tumor Frequency Range</th> -->
-					<th data-unit="percent" data-aggregate="prob-or">F Frequency</th>
-					<th data-unit="percent" data-aggregate="prob-or">M Frequency</th>
-					<th data-unit="percent" data-aggregate="prob-or">Mixed Frequency</th>
-					<th data-unit="percent" data-aggregate="prob-or">Un. Frequency</th>
-					<th>Metastasizes To</th>
-					<th>Images</th>
-					<th>Tumor Summary</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Blood vessel - Aorta hyperplasia - nodular</td>
-					<td>Blood vessel - Aorta</td>
-					<td>
-						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=3008">FVB/NJ</a>
-						
-						<ul><li>inbred</li></ul>
-						</td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=3008&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=46571">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel - Aorta metaplasia - cartilaginous</td>
-					<td>Blood vessel - Aorta</td>
-					<td>
-						None (spontaneous)
-						</td>				
-					<td><a href="strainDetails.do?key=143">C57BL/6J</a>
-						<ul><li>inbred</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>0</td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=143&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=28320">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel - Aorta metaplasia - cartilaginous</td>
-					<td>Blood vessel - Aorta</td>
-					<td>
-						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=4066">B6.FVB-Tg(C3-1-TAg)cJeg/J</a>
-						
-						<ul><li>congenic</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td>&gt;25</td>
-					<td>&gt;25</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=4066&amp;organOfOriginKey=357&amp;tumorFrequencyKeys=28335,28358">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel - Vein hyperplasia</td>
-					<td>Liver</td>
-					<td>
-						Genetic Modification
-						<ul><li>tamoxifen (for inducing expression from mutant alleles)</li></ul>
-						</td>
-					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
-						
-						<ul><li>targeted mutation (conditional)</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8147&amp;organOfOriginKey=552&amp;tumorFrequencyKeys=77643">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel - Vein lesion</td>
-					<td>Liver</td>
-					<td>
-						Genetic Modification
-						<ul><li>tamoxifen (for inducing expression from mutant alleles)</li></ul>
-						</td>
-					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
-						
-						<ul><li>targeted mutation (conditional)</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8147&amp;organOfOriginKey=552&amp;tumorFrequencyKeys=77642">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel blastoma</td>
-					<td>Blood vessel</td>
-					<td>
-						Radiation
-						<ul><li>Cesium-137</li></ul>
-						</td>
-					<td><a href="strainDetails.do?key=8015">C57BL/6J</a>
-						
-						<ul><li>other</li></ul>
-						</td>
-					<td>8.33</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8015&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=74268">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel blastoma</td>
-					<td>Blood vessel</td>
-					<td>
-						Radiation
-						<ul><li>Cesium-137</li></ul>
-						</td>
-					<td><a href="strainDetails.do?key=8014">C57BL/6J-Clock<sup>m1Jt</sup></a>
-						
-						<ul><li>transgenic</li></ul>
-						</td>
-					<td>8.33</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8014&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=74282">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel dysplasia</td>
-					<td>Limb - Forelimb - Shoulder</td>
-					<td>
-						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						
-						<ul><li>targeted mutation (conditional)</li>
-							<li>gene trapped</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94747">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel hamartoma</td>
-					<td>Limb - Forelimb - Shoulder</td>
-					<td>
-						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						
-						<ul><li>targeted mutation (conditional)</li>
-							<li>gene trapped</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94746">Summary</a>
-					</td>
-				</tr>
-				<tr>
-					<td>Blood vessel hamartoma</td>
-					<td>Limb - Forelimb</td>
-					<td>
-						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						
-						<ul><li>targeted mutation (conditional)</li>
-							<li>gene trapped</li>
-							<li>transgenic</li></ul>
-						</td>
-					<td></td>
-					<td></td>
-					<td>observed</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>
-						<a href="tumorSummary.do?strainKey=8783&amp;organOfOriginKey=12&amp;tumorFrequencyKeys=94750">Summary</a>
-					</td>
-				</tr>
-				
-				</tbody>
-			<!-- ////  End Results  //// -->
-		</table>
-		
+		<h1>Table Testbed</h1>		
 		<table class="agro-source agro-flat">
 			<caption>
 				<h2>Raw Flat Table</h2>
@@ -253,120 +15,214 @@
 			<thead>	
 				<tr>
 					<th>
-						NS Hemisphere
+						Flavor
 					</th>
 					<th>
-						North
+						Chocolate
 					</th>
 					<th>
-						North
+						Chocolate
 					</th>
 					<th>
-						South
+						Chocolate
 					</th>
 					<th>
-						South
+						Vanilla
 					</th>
 					<th>
-						North
-					</th>					
+						Vanilla
+					</th>		
+					<th>
+						Chocolate
+					</th>
+					<th>
+						Chocolate
+					</th>
+					<th>
+						Chocolate
+					</th>
+					<th>
+						Vanilla
+					</th>
+					<th>
+						Vanilla
+					</th>									
 				</tr>				
 				<tr>
 					<th>
-						EW Hemisphere
+						Sauce
 					</th>
 					<th>
-						West
+						Butterscotch
 					</th>
 					<th>
-						East
+						Butterscotch
 					</th>
 					<th>
-						West
+						Fudge
 					</th>
 					<th>
-						East
+						Fudge
 					</th>
 					<th>
-						East
-					</th>					
+						Butterscotch
+					</th>	
+					<th>
+						Butterscotch
+					</th>
+					<th>
+						Butterscotch
+					</th>
+					<th>
+						Fudge
+					</th>
+					<th>
+						Fudge
+					</th>
+					<th>
+						Butterscotch
+					</th>									
 				</tr>
 				<tr>
 					<th>
-						Density
+						Topping
 					</th>
 					<th>
-						Urban
+						Sprinkles
 					</th>
 					<th>
-						Rural
+						Coconut
 					</th>
 					<th>
-						Urban
+						M&amp;Ms
 					</th>
 					<th>
-						Rural
+						M&amp;Ms
 					</th>
 					<th>
-						Urban
-					</th>					
+						Sprinkles
+					</th>		
+					<th>
+						Sprinkles
+					</th>
+					<th>
+						Coconut
+					</th>
+					<th>
+						M&amp;Ms
+					</th>
+					<th>
+						M&amp;Ms
+					</th>
+					<th>
+						Sprinkles
+					</th>									
 				</tr>				
 				<tr>
 					<th>
 						Select
 					</th>
 					<th>
-						Pop
+						Number Sold
 					</th>
 					<th>
-						Pop
+						Number Sold
 					</th>
 					<th>
-						Pop
+						Number Sold
 					</th>
 					<th>
-						Pop
+						Number Sold
 					</th>
 					<th>
-						Color
-					</th>					
+						Number Sold
+					</th>		
+					<th>
+						Revenue
+					</th>
+					<th>
+						Revenue
+					</th>
+					<th>
+						Revenue
+					</th>
+					<th>
+						Revenue
+					</th>
+					<th>
+						Revenue
+					</th>									
 				</tr>															
 			</thead>
 			<tbody>
 				<tr>
 					<td>
-						Earth
+						MDI Ice Cream
 					</td>
 					<td>
-						2
+						19
+					</td>
+					<td>
+						7
+					</td>
+					<td>
+						3
+					</td>
+					<td>
+						11
 					</td>
 					<td>
 						4
+					</td>		
+					<td>
+						4.50
 					</td>
 					<td>
-						0.6
+						4.25
 					</td>
-					<td></td>
 					<td>
-						Blue
-					</td>					
+						4.75
+					</td>
+					<td>
+						7.00
+					</td>
+					<td>
+						8.25
+					</td>									
 				</tr>
 				<tr>
 					<td>
-						Mars
+						Red's Ice Cream
 					</td>
 					<td>
-						?
+						9
 					</td>
 					<td>
-						?
+						16
 					</td>
 					<td>
-						?
+						23
 					</td>
-					<td></td>		
 					<td>
-						Red
+						5
+					</td>
+					<td>
+						12
+					</td>		
+					<td>
+						6.50
+					</td>
+					<td>
+						3.80
+					</td>
+					<td>
+						3.25
+					</td>
+					<td>
+						6.50
+					</td>
+					<td>
+						5.75
 					</td>																			
 				</tr>
 			</tbody>
