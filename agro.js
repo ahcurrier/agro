@@ -1,12 +1,18 @@
-$(function() {
-	
-	var agro = function($sourceTable, options) {
-		
-		var o = options || {},
+(function($) {
+
+	$.fn.agro = function(options) {
+
+	    if (this.length > 1) {
+	        this.each(function() { $(this).agro(options) });
+	        return this;
+	    }
+
+		var self = this,
+			o = $.extend({}, $.fn.agro.defaults, options),
 			a = {},
 
-			$sourceRows = $sourceTable.find('tbody > tr'),
-			$sourceCells = $sourceTable.find('tbody > tr > td'),
+			$sourceRows = this.find('tbody > tr'),
+			$sourceCells = this.find('tbody > tr > td'),
 			
 			$a, $caption, $hidden, $thead, $theadRow, $tbody,
 			$categories, $metrics, $categoryNames, metricCells,
@@ -20,21 +26,42 @@ $(function() {
 			ui = {},
 			items = [],
 			
+			aggregators = {
+				'prob-or': function(values, unit) {
+					
+					var v, 
+						s = 1,
+						m = (unit == 'percent') ? 0.01 : 1.0;
+					
+					for(v = 0; v < values.length; v += 1) {
+						s *= (1 - values[v] * m);
+					}
+					
+					return Number.parseFloat((1 - s) / m).toFixed(2);
+	
+				},
+				'sum': function(values) {
+					return numbers.reduce(function(sum, n) {
+						sum += n;
+					});
+				}
+			},
+			
 			getTermCellCallback = function(category) {
 				
 				var uc = {};
-				
+
 				return function(i) {
 					var $term = $(this),
-						term = $term.text(),
-						cellClass, termId;
-					if (!uc.hasOwnProperty(term)) {
+						termKey = $term.text().trim(),
+						term = $term.html(),
+						cellClass;
+					if (!uc.hasOwnProperty(termKey)) {
+						uc[termKey] = category.terms.length;
 						category.terms.push(term);
-						uc[term] = 1;
 					}
-	
-					termId = category.terms.indexOf(term);
-					cellClass = category.id + '-' + termId;
+
+					cellClass = category.id + '-' + uc[termKey];
 					if (cellClasses.length < i + 1) {
 						cellClasses.push([]);
 					}
@@ -45,30 +72,36 @@ $(function() {
 			
 			metricCellCallback = function(i) {
 				var $metric = $(this),
-					metric = $metric.text(),
+					aggregate = $metric.data('aggregate'),
+					unit = $metric.data('unit') || false,
+					metricKey = $metric.text().trim(),
+					metric = $metric.html(),
 					cellClass;
-				if (!um.hasOwnProperty(metric)) {
-					metrics.push(metric);
-					um[metric] = 1;
+				if (!um.hasOwnProperty(metricKey)) {
+					um[metricKey] = metrics.length;
+					if (aggregate === undefined || !aggregators.hasOwnProperty(aggregate)) {
+						aggregate = 'sum';
+					}
+					metrics.push({ name: metric, unit: unit, aggregate: aggregate });
 				}
-				cellClass = 'm' + metrics.indexOf(metric);
+				cellClass = 'm' + um[metricKey];
 				cellClasses[i].push(cellClass);
 				$metric.addClass(cellClass);
 			};
 
 		
-		if (o.source === undefined || o.source === 'flat') {
+		if (o.source === 'flat' || this.hasClass('agro-flat')) {
 			
 			// Flat source
 			// Get categories, terms, and metrics from thead
 			
-			$categories = $sourceTable.find('thead > tr:not(:last-child)');
+			$categories = this.find('thead > tr:not(:last-child)');
 
 			$categories.each(function() {
 				var $row = $(this),
 					$name = $row.find('th:first-child'),
 					$terms = $row.find('th + th'),
-					category = { id: String.fromCharCode(categories.length + 97), name: $name.text().trim(), terms: [] },
+					category = { id: String.fromCharCode(categories.length + 97), name: $name.html(), terms: [] },
 					termCellCallback = getTermCellCallback(category);
 				
 				$terms.each(termCellCallback);
@@ -76,7 +109,7 @@ $(function() {
 			});
 			
 			
-			$metrics = $sourceTable.find('thead > tr:last-child > th + th');			
+			$metrics = this.find('thead > tr:last-child > th + th');			
 			$metrics.each(metricCellCallback);
 		
 			// Apply category and metric classes to each column
@@ -90,14 +123,14 @@ $(function() {
 			// Stacked source
 			// Get categories and metrics from thead, get terms from tbody
 			
-			$categoryNames = $sourceTable.find('thead th.category');
+			$categoryNames = this.find('thead th.category');
 			
 			$categoryNames.each(function() {
 				
 				var $name = $(this),
 					index = $name.index() + 1,
 					$terms = $sourceCells.filter(':nth-child(' + index + ')'),
-					category = { id: String.fromCharCode(categories.length + 97), name: $name.text().trim(), terms: [] },
+					category = { id: String.fromCharCode(categories.length + 97), name: $name.html(), terms: [] },
 					termCellCallback = getTermCellCallback(category);
 					
 				$terms.each(termCellCallback);
@@ -113,7 +146,7 @@ $(function() {
 				$(this).find(metricCells).attr('class', cellClasses[r].join(' '));
 			});
 			
-			$metrics = $sourceTable.find('thead th + th:not(.category)');
+			$metrics = this.find('thead th + th:not(.category)');
 
 			$metrics.each(metricCellCallback);
 			
@@ -148,7 +181,13 @@ $(function() {
 			for(i = 0; i < categories.length; i += 1) {
 				o.display.push({i:i,v:true});
 			}
-		}		
+		}
+		
+		if (o.aggregators !== undefined) {
+			$.extend(aggregators, o.aggregators);
+		}
+		
+		
 
 		/*
 			Render a cell in the agro table.
@@ -167,8 +206,8 @@ $(function() {
 				$currentRow = $row,
 				cellClass, cellCategories, cellSubcategories, cellSubcategoriesHtml,
 				termDescendantCount, metricFilter, metricValueCount, metricValue,
-				descendantCount = 0,
-				$nextRow, categoryIndex, m, $metricCells, sum, summary, isNumber, d, isColVisible;
+				descendantCount = 0, aggregateValues, metric,
+				$nextRow, categoryIndex, m, $metricCells, aggregateValue, summary, isNumber, d, isColVisible;
 				
 			if (colIndex < o.display.length) {
 				
@@ -183,7 +222,7 @@ $(function() {
 					cellSubcategoriesHtml = '';	
 				} else {
 					cellSubcategories = categoryChain;
-					cellSubcategoriesHtml = '<ul><li>' + categoryChain.join('</li><li>') + '</li></ul>';
+					cellSubcategoriesHtml = '<ul class="rollup"><li>' + categoryChain.join('</li><li>') + '</li></ul>';
 				}	
 				
 				for (termId = 0; termId < category.terms.length; termId += 1) {
@@ -234,23 +273,24 @@ $(function() {
 				
 				if (metricValueCount > 0) {				
 					for (m = 0; m < metrics.length; m += 1) {
+						metric = metrics[m];
 						$metricCells = $sourceCells.filter('.m' + m + metricFilter);
 						if ($metricCells.length > 1) {
-							sum = 0;
+							aggregateValues = [];
 							summary = [];
 							isNumber = true;
 							$metricCells.each(function() {
 								var cellValue = $(this).html() || '',
 									value = parseFloat(cellValue);
 								if (!Number.isNaN(value)) {
-									sum += value;
+									aggregateValues.push(value);
 								} else {
 									isNumber = false;
 								}
 								summary.push(cellValue);
 							});
 							if (isNumber) {
-								metricValue = sum;
+								metricValue = aggregators[metric.aggregate](aggregateValues, metric.unit);
 							} else {
 								metricValue = summary.join('<br>');
 							}
@@ -280,9 +320,9 @@ $(function() {
 		$thead = $('<thead></thead>').append($theadRow);
 		$tbody = $('<tbody></tbody>');
 		
-		$a = $('<table></table>').append($caption).append($thead).append($tbody);
+		$a = $('<table class="agro"></table>').append($caption).append($thead).append($tbody);
 
-		$sourceTable.after($a);
+		this.after($a);
 		
 		// Show hidden columns
 		
@@ -386,7 +426,7 @@ $(function() {
 			});
 			
 			$.each(metrics, function(i, metric) {
-				$theadRow.append('<th>' + metric + '</th>');
+				$theadRow.append('<th>' + metric.name + '</th>');
 			});
 			
 			// Render table body
@@ -446,7 +486,7 @@ $(function() {
 				
 				accept: function($d) {
 					
-					// Don'a accept drops onto adjacent edges
+					// Don't accept drops onto adjacent edges
 					
 					var dragFrom, dragAfter;		
 					
@@ -487,17 +527,23 @@ $(function() {
 			});	
 
 		};
+
+		a.render();		
 		
-		a.render();
+		// In collections, public methods are called via the data object		
+		$.each(a, function(k, o) { self.data(k, o);	}); 
 		
-		return a;
+		// In single instances, methods are called via the object itself
+		$.extend(this, a);
+
+		return this;
 	};
-	
-	
-	// var tableFromFlat = agro($('.agro.agro-flat'), { source: 'flat', display: [{i:2,v:true}] });
 
-	var tableFromStacked = agro($('.agro.agro-stacked'), { source: 'stacked' });
+	$(function() {
 
+		$('.agro-source').agro();	
+
+	});
 	
-});
+})(jQuery);
 

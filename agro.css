@@ -1,35 +1,57 @@
-
-
-table.agro {
+table.agro-source {
 	display:none;
-font-size:0.25em;
+	font-size:0.25em;
 }
-h2,h3,h4,p {
+
+.id1 {
+	display:none;
+}
+
+.agro h2,h3,h4,p {
 	margin:0;
 }
 
-td > ul {
+.agro td ul {
 	list-style: none;
-	margin:0.5em 0 0;
-	padding:0;
-	font-size:0.75em;
+	margin:0 0 0.5em;
+	padding:0;	
+	font-style:italic;
 }
-table {
+.agro td > ul {
+	font-size:0.75em;	
+	margin:0.5em 0 0;
+}
+
+.agro td > ul.rollup > li {
+	font-style:normal;
+}
+
+table.agro {
 	border-collapse: collapse;
 	margin:2em 0;
 }
-caption {
+
+.agro caption {
 	padding:0 0 6px;
 }
-td {
+
+.agro td {
 	padding:4px 10px;
 }
-th {
+
+.agro th {
 	padding: 0 10px;
 	position:relative;
 }
-td h4,
-th h4 {
+
+.agro td em,
+.agro th em {
+	display:block;
+	text-transform: none;
+}
+
+.agro td h4,
+.agro th h4 {
 	color:rgba(0,0,0,0.4);
 	font-weight:normal;
 	text-transform: uppercase;
@@ -41,34 +63,32 @@ th h4 {
 	user-select:none;
 	-webkit-user-select:none;
 }
-th h4 {
+
+.agro th h4 {
 	padding:4px 16px 4px 0;
 	position:relative;
 }
-td h4:hover,
-th h4:hover {
+
+.agro td h4:hover,
+.agro th h4:hover {
 	background-color:rgba(0, 160, 209, 0.25);
 	color:black;
 }
-td {
+
+.agro td {
 	border:1px solid #bbb;
 }
-table.hierarchical tr > td:last-child {
-	color:red;
-}
-table.flat td + td {
-	color:red;
-}
 
-th > h4.drop-into-hover {
+
+.agro th > h4.drop-into-hover {
 	background-color:red;
 }
 
-th > div.drop-edge-hover {
+.agro th > div.drop-edge-hover {
 	background:purple;
 }
 
-th > div {
+.agro th > div {
 	position:absolute;
 	top:0;
 	right:-10px;
@@ -76,7 +96,7 @@ th > div {
 	width:20px;
 }
 
-th h4 span {
+.agro th h4 span {
 	display:block;
 	position:absolute;
 	padding:3px 0 5px;
@@ -89,21 +109,21 @@ th h4 span {
 	cursor:pointer;
 }
 
-th h4:hover span {
+.agro th h4:hover span {
 	color:red;
 }
 
-th h4 span:hover {
+.agro th h4 span:hover {
 	color:white;
 	background-color:red;
 }
 
-caption select {
+.agro caption select {
 	float:right;
 	
 }
 
-.inactive {
+.agro .inactive {
 	pointer-events: none;
 	visibility:hidden;
 }

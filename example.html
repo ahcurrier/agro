@@ -11,7 +11,7 @@
 		<h1>Table Testbed</h1>
 		
 		
-		<table class="agro agro-stacked">
+		<table class="agro-source">
 			<thead>
 				<tr>
 					<th>Tumor Name</th>
@@ -19,10 +19,10 @@
 					<th class="category">Treatment Type <em>Agents</em></th>
 					<th class="category">Strain Name <em>Strain Types</em></th>
 					<!--  <th colspan="4">Tumor Frequency Range</th> -->
-					<th>F Frequency</th>
-					<th>M Frequency</th>
-					<th>Mixed Frequency</th>
-					<th>Un. Frequency</th>
+					<th data-unit="percent" data-aggregate="prob-or">F Frequency</th>
+					<th data-unit="percent" data-aggregate="prob-or">M Frequency</th>
+					<th data-unit="percent" data-aggregate="prob-or">Mixed Frequency</th>
+					<th data-unit="percent" data-aggregate="prob-or">Un. Frequency</th>
 					<th>Metastasizes To</th>
 					<th>Images</th>
 					<th>Tumor Summary</th>
@@ -36,9 +36,8 @@
 						None (spontaneous)
 						</td>
 					<td><a href="strainDetails.do?key=3008">FVB/NJ</a>
-						<!-- \n -->
-						<em>
-							inbred</em>
+						
+						<ul><li>inbred</li></ul>
 						</td>
 					<td></td>
 					<td>observed</td>
@@ -55,18 +54,10 @@
 					<td>Blood vessel - Aorta</td>
 					<td>
 						None (spontaneous)
-						</td>
-					<td><a href="strainDetails.do?key=3008">FVB/NJ</a>
-						<!-- \n -->
-						<em>
-							inbred</em>
-						</td>						
-<!--
+						</td>				
 					<td><a href="strainDetails.do?key=143">C57BL/6J</a>
-						<em>
-							inbred</em>
+						<ul><li>inbred</li></ul>
 						</td>
--->
 					<td></td>
 					<td></td>
 					<td></td>
@@ -84,10 +75,9 @@
 						None (spontaneous)
 						</td>
 					<td><a href="strainDetails.do?key=4066">B6.FVB-Tg(C3-1-TAg)cJeg/J</a>
-						<!-- \n -->
-						<em>
-							congenic<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>congenic</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td>&gt;25</td>
 					<td>&gt;25</td>
@@ -103,15 +93,13 @@
 					<td>Blood vessel - Vein hyperplasia</td>
 					<td>Liver</td>
 					<td>
-						Genetic Modification<!-- \n -->
-						<em>
-							tamoxifen (for inducing expression from mutant alleles)</em>
+						Genetic Modification
+						<ul><li>tamoxifen (for inducing expression from mutant alleles)</li></ul>
 						</td>
 					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
-						<!-- \n -->
-						<em>
-							targeted mutation (conditional)<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>targeted mutation (conditional)</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td></td>
 					<td></td>
@@ -127,15 +115,13 @@
 					<td>Blood vessel - Vein lesion</td>
 					<td>Liver</td>
 					<td>
-						Genetic Modification<!-- \n -->
-						<em>
-							tamoxifen (for inducing expression from mutant alleles)</em>
+						Genetic Modification
+						<ul><li>tamoxifen (for inducing expression from mutant alleles)</li></ul>
 						</td>
 					<td><a href="strainDetails.do?key=8147">C57BL/6-Tg(Tal1-cre/ERT)1Jrg Tsc1<sup>tm1Djk</sup></a>
-						<!-- \n -->
-						<em>
-							targeted mutation (conditional)<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>targeted mutation (conditional)</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td></td>
 					<td></td>
@@ -151,14 +137,12 @@
 					<td>Blood vessel blastoma</td>
 					<td>Blood vessel</td>
 					<td>
-						Radiation<!-- \n -->
-						<em>
-							Cesium-137</em>
+						Radiation
+						<ul><li>Cesium-137</li></ul>
 						</td>
 					<td><a href="strainDetails.do?key=8015">C57BL/6J</a>
-						<!-- \n -->
-						<em>
-							other</em>
+						
+						<ul><li>other</li></ul>
 						</td>
 					<td>8.33</td>
 					<td></td>
@@ -174,14 +158,12 @@
 					<td>Blood vessel blastoma</td>
 					<td>Blood vessel</td>
 					<td>
-						Radiation<!-- \n -->
-						<em>
-							Cesium-137</em>
+						Radiation
+						<ul><li>Cesium-137</li></ul>
 						</td>
 					<td><a href="strainDetails.do?key=8014">C57BL/6J-Clock<sup>m1Jt</sup></a>
-						<!-- \n -->
-						<em>
-							transgenic</em>
+						
+						<ul><li>transgenic</li></ul>
 						</td>
 					<td>8.33</td>
 					<td></td>
@@ -200,11 +182,10 @@
 						None (spontaneous)
 						</td>
 					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						<!-- \n -->
-						<em>
-							targeted mutation (conditional)<!-- \n -->
-							gene trapped<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>targeted mutation (conditional)</li>
+							<li>gene trapped</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td></td>
 					<td></td>
@@ -223,11 +204,10 @@
 						None (spontaneous)
 						</td>
 					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						<!-- \n -->
-						<em>
-							targeted mutation (conditional)<!-- \n -->
-							gene trapped<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>targeted mutation (conditional)</li>
+							<li>gene trapped</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td></td>
 					<td></td>
@@ -246,11 +226,10 @@
 						None (spontaneous)
 						</td>
 					<td><a href="strainDetails.do?key=8783">[not specified]-Gt(ROSA)26Sor<sup>tm1(EYFP)Cos</sup> Tg(Prrx1-cre)1Cjt Tsc2<sup>tm1.1Mjg</sup></a>
-						<!-- \n -->
-						<em>
-							targeted mutation (conditional)<!-- \n -->
-							gene trapped<!-- \n -->
-							transgenic</em>
+						
+						<ul><li>targeted mutation (conditional)</li>
+							<li>gene trapped</li>
+							<li>transgenic</li></ul>
 						</td>
 					<td></td>
 					<td></td>
@@ -266,10 +245,8 @@
 				</tbody>
 			<!-- ////  End Results  //// -->
 		</table>
-
 		
-		
-		<table class="agro agro-flat">
+		<table class="agro-source agro-flat">
 			<caption>
 				<h2>Raw Flat Table</h2>
 			</caption>
