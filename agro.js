@@ -398,7 +398,7 @@
 
 			$theadRow.append('<th data-col="-1"><div></div></th>');
 			$.each(o.display, function(i, c) {
-				var $th, $h4, $hide, $edge;
+				var $th, $h4, $hide, $edge, q, k;
 				if (c.v) {
 					$th = $('<th></th>');
 					$h4 = $('<h4>' + categories[c.i].name + '</h4>');
@@ -414,10 +414,18 @@
 					// Hide column
 					
 					$hide.on('click', function() {
-						$hidden.append('<option value="' + c.i + '|' + i + '|' + o.display.length + '">' + categories[c.i].name + '</option>');
-						$hidden.removeClass('inactive');
-						o.display.splice(i, 1);
+
+						
+						for (q = i - c.w + 1; q < i + 1; q += 1) {
+							k = o.display[q];
+							$hidden.append('<option value="' + k.i + '|' + q + '|' + o.display.length + '">' + categories[k.i].name + '</option>');							
+							
+						}
+						o.display.splice(i - c.w + 1, c.w);
+						$hidden.removeClass('inactive');						
+						
 						a.render();
+						$hidden.children().first().prop('selected', true);
 					});
 				}
 			});
